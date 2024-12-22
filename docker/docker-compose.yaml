@@ -1,0 +1,61 @@
+version: '3.9'
+
+services:
+  postgres:
+    container_name: postgres_container
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: catalogs
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "6543:5432"
+    networks:
+      - keycloak
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@pgadmin.org
+      PGADMIN_DEFAULT_PASSWORD: password
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - "5051:80"
+    networks:
+      - keycloak
+    restart: unless-stopped
+
+  keycloak:
+    image: bitnami/keycloak:latest
+    container_name: keycloak_container
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: postgres_container
+      DB_DATABASE: catalogs
+      DB_USER: admin
+      DB_SCHEMA: public
+      DB_PASSWORD: password
+      KEYCLOAK_USER: user
+      KEYCLOAK_PASSWORD: bitnami
+    ports:
+      - "8484:8080"
+    depends_on:
+      - postgres
+    networks:
+      - keycloak
+    restart: unless-stopped
+
+networks:
+  keycloak:
+    driver: bridge
+
+volumes:
+  postgres:
+  pgadmin:

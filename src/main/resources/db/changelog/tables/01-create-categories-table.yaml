@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-categories-table
+      author: jokindy
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: categories
+      changes:
+        - createSequence:
+            sequenceName: categories_table_id_seq
+        - createTable:
+            tableName: categories
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                  defaultValueSequenceNext: categories_table_id_seq
+              - column:
+                  name: name
+                  type: varchar(85)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: logo_url
+                  type: varchar(255)
+                  constraints:
+                    nullable: false

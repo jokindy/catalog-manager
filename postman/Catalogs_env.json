@@ -1,0 +1,69 @@
+{
+	"id": "c11803da-7f77-45c6-9edd-3bcbf759469d",
+	"name": "Catalogs env",
+	"values": [
+		{
+			"key": "keycloak_server",
+			"value": "http://localhost:8484",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "realm_name",
+			"value": "CatalogManager",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "grant_type",
+			"value": "password",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "client_id",
+			"value": "login-app",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "user_username",
+			"value": "user1",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "user_password",
+			"value": "password",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "admin_username",
+			"value": "admin1",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "admin_password",
+			"value": "password",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "service_direct_url",
+			"value": "http://localhost:8080/api/v1",
+			"type": "default",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2024-12-22T08:50:58.680Z",
+	"_postman_exported_using": "Postman/11.23.3"
+}

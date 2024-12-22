@@ -1,0 +1,55 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-products-table
+      author: jokindy
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: products
+      changes:
+        - createSequence:
+            sequenceName: products_table_id_seq
+        - createTable:
+            tableName: products
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                  defaultValueSequenceNext: products_table_id_seq
+              - column:
+                  name: name
+                  type: varchar(85)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: price
+                  type: DECIMAL(15, 2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: stock_quantity
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: category_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            constraintName: products_fk
+            baseTableName: products
+            baseColumnNames: category_id
+            referencedTableName: categories
+            referencedColumnNames: id
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
