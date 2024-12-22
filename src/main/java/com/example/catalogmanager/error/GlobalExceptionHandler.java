@@ -26,51 +26,51 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler
   public ResponseEntity<ErrorDto> handleGenericException(GeneralException exception) {
-    logger.error(exception.getMessage(), exception);
     ErrorDto error =
         new ErrorDto(List.of(new FaultDto(exception.getMessage(), exception.getReason())));
+    logger.error("TraceId: {} - {}", error.getTraceId(), exception.getMessage(), exception);
     return ResponseEntity.status(exception.getStatus()).body(error);
   }
 
   @ExceptionHandler
   public ResponseEntity<ErrorDto> handleMethodArgumentNotValidException(
       MethodArgumentNotValidException exception) {
-    logger.error(exception.getMessage(), exception);
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(handleFieldErrors(exception));
+    ErrorDto error = handleFieldErrors(exception);
+    logger.error("TraceId: {} - {}", error.getTraceId(), exception.getMessage(), exception);
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
   }
 
   @ExceptionHandler
   public ResponseEntity<ErrorDto> handleMethodArgumentTypeMismatchException(
       MethodArgumentTypeMismatchException exception) {
-    logger.error(exception.getMessage(), exception);
     ErrorDto error =
         new ErrorDto(
             List.of(
                 new FaultDto(
                     INVALID_PARAMETER_TEMPLATE.formatted(exception.getPropertyName()),
                     exception.getMessage())));
+    logger.error("TraceId: {} - {}", error.getTraceId(), exception.getMessage(), exception);
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
   }
 
   @ExceptionHandler
   public ResponseEntity<ErrorDto> handleConstraintViolationException(
       ConstraintViolationException exception) {
-    logger.error(exception.getMessage(), exception);
-
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-        .body(handleConstraintViolations(exception.getConstraintViolations()));
+    ErrorDto error = handleConstraintViolations(exception.getConstraintViolations());
+    logger.error("TraceId: {} - {}", error.getTraceId(), exception.getMessage(), exception);
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
   }
 
   @ExceptionHandler
   public ResponseEntity<ErrorDto> handleMissingServletRequestParameterException(
       MissingServletRequestParameterException exception) {
-    logger.error(exception.getMessage(), exception);
     ErrorDto error =
         new ErrorDto(
             List.of(
                 new FaultDto(
                     INVALID_PARAMETER_TEMPLATE.formatted(exception.getParameterName()),
                     exception.getMessage())));
+    logger.error("TraceId: {} - {}", error.getTraceId(), exception.getMessage(), exception);
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
   }
 
@@ -90,7 +90,6 @@ public class GlobalExceptionHandler {
 
   private ErrorDto handleConstraintViolations(Set<ConstraintViolation<?>> constraintViolations) {
     List<FaultDto> faultDtos = new ArrayList<>();
-
     constraintViolations.forEach(
         violation ->
             faultDtos.add(
@@ -98,12 +97,10 @@ public class GlobalExceptionHandler {
                     INVALID_PARAMETER_TEMPLATE.formatted(
                         getInvalidParameter(violation.getPropertyPath())),
                     violation.getMessage())));
-
     return new ErrorDto(faultDtos);
   }
 
   private String getInvalidParameter(Path propertyPath) {
-
     String[] pathParts = propertyPath.toString().split("\\.");
     return pathParts[pathParts.length - 1];
   }
